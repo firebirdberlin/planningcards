@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -21,6 +22,7 @@ public class MainActivity extends Activity {
     private static final String DEBUG_TAG = MainActivity.class.getSimpleName();
 
     DrawView drawView;
+    private CustomViewPager viewPager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +53,7 @@ public class MainActivity extends Activity {
         gestureScanner.setOnDoubleTapListener(touchListener);
         */
 
-        CustomViewPager viewPager = new CustomViewPager(this);
+        viewPager = new CustomViewPager(this);
         List<View> views = new ArrayList<View>();
         List<DrawView> drawViews = new ArrayList<DrawView>();
 
@@ -101,6 +103,20 @@ public class MainActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         //getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
+            viewPager.swipeNext();
+            return true;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP ) {
+            viewPager.swipePrev();
+            return true;
+        }
+        return false;
     }
 
     /*

@@ -41,4 +41,23 @@ public class CustomViewPager extends ViewPager {
     public void setPagingEnabled(boolean enabled) {
         this.enabled = enabled;
     }
+
+    public void swipeNext() {
+        if (!this.enabled) {
+            return;
+        }
+        int currentItem = getCurrentItem();
+        if ( currentItem < getAdapter().getCount() - 1) {
+            setCurrentItem(currentItem + 1);
+        }
+    }
+    public void swipePrev() {
+        if (!this.enabled) {
+            return;
+        }
+        int currentItem = getCurrentItem();
+        if ( currentItem > 0 ) {
+            setCurrentItem(currentItem - 1);
+        }
+    }
 }
