@@ -38,6 +38,10 @@ public class CustomViewPager extends ViewPager {
         return false;
     }
 
+    public boolean isPagingEnabled() {
+        return this.enabled;
+    }
+
     public void setPagingEnabled(boolean enabled) {
         this.enabled = enabled;
     }
@@ -60,4 +64,5 @@ public class CustomViewPager extends ViewPager {
             setCurrentItem(currentItem - 1);
         }
     }
+
 }

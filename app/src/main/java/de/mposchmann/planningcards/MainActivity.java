@@ -107,25 +107,30 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
-            viewPager.swipeNext();
-            return true;
-        }
+        if ( viewPager.isPagingEnabled() ) {
+            if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
+                viewPager.swipeNext();
+                return true;
+            }
 
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP ) {
-            viewPager.swipePrev();
-            return true;
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP ) {
+                viewPager.swipePrev();
+                return true;
+            }
+        } else {
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                int current = viewPager.getCurrentItem();
+                MyPageAdapter adapter = (MyPageAdapter) viewPager.getAdapter();
+                DrawView view = (DrawView) adapter.getItem(current);
+                if ( view.isHide() ) {
+                    view.setHide(false);
+                    viewPager.setPagingEnabled(true);
+                    return true;
+                }
+            }
         }
         return false;
     }
-
-    /*
-   @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        this.gestureScanner.onTouchEvent(event);
-        return super.onTouchEvent(event);
-    }
-    */
 
    private static class MyTouchListener implements OnTouchListener {
 
@@ -215,7 +220,6 @@ public class MainActivity extends Activity {
 
         private void toggleDrawView() {
             drawView.setHide(!drawView.isHide());
-            drawView.invalidate();
             viewPager.setPagingEnabled(! drawView.isHide() );
         }
     }
