@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
@@ -16,6 +17,8 @@ import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
+
+import com.firebirdberlin.pageindicator.PageIndicator;
 
 public class MainActivity extends Activity {
 
@@ -83,18 +86,23 @@ public class MainActivity extends Activity {
 
         }
 
+        setContentView(R.layout.main);
+
 
         MyPageAdapter p = new MyPageAdapter(views);
+        ViewPager pager = (ViewPager) findViewById(R.id.pager);
+        pager.setAdapter(p);
 
-        ViewPager vp = new ViewPager(this);
-        vp.setAdapter(p);
-        setContentView(vp);
+        final PageIndicator pageIndicator = (PageIndicator) findViewById(R.id.page_indicator);
+        pageIndicator.setPageCount(texts.length);
+        pager.setOnPageChangeListener(new OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
 
-        /*
-         * drawView = new DrawView(this);
-         * drawView.setBackgroundColor(Color.WHITE);
-         * setContentView(drawView);
-         */
+            public void onPageSelected(int position) {
+                pageIndicator.setCurrentPage(position);
+            }
+        });
     }
 
     @Override
