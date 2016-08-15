@@ -88,10 +88,28 @@ public class MainActivity extends Activity {
 
         }
 
-	MyPageAdapter p = new MyPageAdapter(views);
+        setContentView(R.layout.main);
+        //final PageIndicator pageIndicator = (PageIndicator) findViewById(R.id.page_indicator);
+
+	    MyPageAdapter p = new MyPageAdapter(views);
 
         viewPager.setAdapter(p);
         setContentView(viewPager);
+
+
+        /*
+        pageIndicator.setPageCount(texts.length);
+
+        viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            public void onPageSelected(int position) {
+                pageIndicator.setCurrentPage(position);
+            }
+        });
+        */
+
 
         /*
          * drawView = new DrawView(this);
