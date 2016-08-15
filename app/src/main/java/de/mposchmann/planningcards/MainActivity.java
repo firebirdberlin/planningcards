@@ -5,11 +5,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
     private static final String DEBUG_TAG = MainActivity.class.getSimpleName();
 
     DrawView drawView;
+    private CustomViewPager viewPager = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class MainActivity extends Activity {
         gestureScanner.setOnDoubleTapListener(touchListener);
         */
 
+        viewPager = new CustomViewPager(this);
         List<View> views = new ArrayList<View>();
         List<DrawView> drawViews = new ArrayList<DrawView>();
 
@@ -68,7 +70,7 @@ public class MainActivity extends Activity {
             drawView.setKeepScreenOn(true);
 
             //every view must have its own GestureDetector to handle the events' view later
-            MyGestureListener touchListener = new MyGestureListener(drawView);
+            MyGestureListener touchListener = new MyGestureListener(drawView, viewPager);
             GestureDetector gestureDetector = new GestureDetector(this, touchListener);
             gestureDetector.setOnDoubleTapListener(touchListener);
 
@@ -86,23 +88,16 @@ public class MainActivity extends Activity {
 
         }
 
-        setContentView(R.layout.main);
+	MyPageAdapter p = new MyPageAdapter(views);
 
+        viewPager.setAdapter(p);
+        setContentView(viewPager);
 
-        MyPageAdapter p = new MyPageAdapter(views);
-        ViewPager pager = (ViewPager) findViewById(R.id.pager);
-        pager.setAdapter(p);
-
-        final PageIndicator pageIndicator = (PageIndicator) findViewById(R.id.page_indicator);
-        pageIndicator.setPageCount(texts.length);
-        pager.setOnPageChangeListener(new OnPageChangeListener() {
-            public void onPageScrollStateChanged(int state) {}
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-            public void onPageSelected(int position) {
-                pageIndicator.setCurrentPage(position);
-            }
-        });
+        /*
+         * drawView = new DrawView(this);
+         * drawView.setBackgroundColor(Color.WHITE);
+         * setContentView(drawView);
+         */
     }
 
     @Override
@@ -112,13 +107,32 @@ public class MainActivity extends Activity {
         return true;
     }
 
-    /*
-   @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        this.gestureScanner.onTouchEvent(event);
-        return super.onTouchEvent(event);
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ( viewPager.isPagingEnabled() ) {
+            if ((keyCode == KeyEvent.KEYCODE_VOLUME_DOWN)){
+                viewPager.swipeNext();
+                return true;
+            }
+
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_UP ) {
+                viewPager.swipePrev();
+                return true;
+            }
+        } else {
+            if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
+                int current = viewPager.getCurrentItem();
+                MyPageAdapter adapter = (MyPageAdapter) viewPager.getAdapter();
+                DrawView view = (DrawView) adapter.getItem(current);
+                if ( view.isHide() ) {
+                    view.setHide(false);
+                    viewPager.setPagingEnabled(true);
+                    return true;
+                }
+            }
+        }
+        return false;
     }
-    */
 
    private static class MyTouchListener implements OnTouchListener {
 
@@ -144,10 +158,12 @@ public class MainActivity extends Activity {
     private static class MyGestureListener implements OnGestureListener, OnDoubleTapListener {
 
         private final DrawView drawView;
+        private final CustomViewPager viewPager;
 
-        public MyGestureListener(DrawView drawView) {
+        public MyGestureListener(DrawView drawView, CustomViewPager viewPager) {
             super();
             this.drawView = drawView;
+            this.viewPager = viewPager;
         }
 
         @Override
@@ -183,10 +199,6 @@ public class MainActivity extends Activity {
         @Override
         public boolean onSingleTapUp(MotionEvent event) {
             //Log.d(DEBUG_TAG, "onSingleTapUp: " + event.toString());
-            if (drawView.isHide()) {
-                drawView.setHide(false);
-                drawView.invalidate();
-            }
             return true;
         }
 
@@ -210,11 +222,11 @@ public class MainActivity extends Activity {
 
         private void toggleDrawView() {
             drawView.setHide(!drawView.isHide());
-            drawView.invalidate();
+            viewPager.setPagingEnabled(! drawView.isHide() );
         }
     }
 
-     private final class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+    private final class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
         private final List<DrawView> views;
 

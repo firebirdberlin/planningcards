@@ -17,6 +17,10 @@ public class MyPageAdapter extends PagerAdapter {
         return pages.size();
     }
 
+    public View getItem(int i) {
+        return pages.get(i);
+    }
+
     @Override
     public boolean isViewFromObject(View view, Object object) {
         return view.equals(object);

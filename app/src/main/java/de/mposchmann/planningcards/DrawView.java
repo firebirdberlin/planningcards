@@ -42,6 +42,7 @@ public class DrawView extends View {
 
     public void setHide(boolean hide) {
         this.hide = hide;
+        invalidate();
     }
 
     public String getText() {
