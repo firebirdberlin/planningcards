@@ -30,7 +30,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // setContentView(R.layout.activity_main);
 
         //Remove title bar
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -38,25 +37,11 @@ public class MainActivity extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        setContentView(R.layout.main);
 
-        /*
-        HorizontalScrollView scrollView = new HorizontalScrollView(this);
+        viewPager = (CustomViewPager) findViewById(R.id.pager);
+        final PageIndicator pageIndicator = (PageIndicator) findViewById(R.id.page_indicator);
 
-        TextView tv = new TextView(this);
-        String text = "Manually render this view (and all of its children) to the given Canvas. The view must have already done a full layout before this function is called. When implementing a view, implement || You can call this function yourself to have the scroll view perform scrolling from a key event, just as if the event had been dispatched to it by the view hierarchy. || Handles scrolling in response to a  shortcut press. This method will scroll the view to the left or right and give the focus to the leftmost/rightmost component in the new visible area. If no component is a good";
-        tv.setText(text);
-        scrollView.addView(tv);
-        setContentView(scrollView);
-        */
-
-
-        /*
-        MyTouchEventListener touchListener = new MyTouchEventListener();
-        gestureScanner = new GestureDetector(this, touchListener);
-        gestureScanner.setOnDoubleTapListener(touchListener);
-        */
-
-        viewPager = new CustomViewPager(this);
         List<View> views = new ArrayList<View>();
         List<DrawView> drawViews = new ArrayList<DrawView>();
 
@@ -77,7 +62,6 @@ public class MainActivity extends Activity {
             //test scale detection
             ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(this,
                                                                                  new ScaleListener(drawViews));
-
             MyTouchListener onTouchListener = new MyTouchListener(gestureDetector,
                                                                   scaleGestureDetector);
             drawView.setOnTouchListener(onTouchListener);
@@ -88,18 +72,11 @@ public class MainActivity extends Activity {
 
         }
 
-        setContentView(R.layout.main);
-        //final PageIndicator pageIndicator = (PageIndicator) findViewById(R.id.page_indicator);
+        MyPageAdapter p = new MyPageAdapter(views);
 
-	    MyPageAdapter p = new MyPageAdapter(views);
-
-        viewPager.setAdapter(p);
-        setContentView(viewPager);
-
-
-        /*
         pageIndicator.setPageCount(texts.length);
 
+        viewPager.setAdapter(p);
         viewPager.setOnPageChangeListener(new OnPageChangeListener() {
             public void onPageScrollStateChanged(int state) {}
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
@@ -108,14 +85,7 @@ public class MainActivity extends Activity {
                 pageIndicator.setCurrentPage(position);
             }
         });
-        */
 
-
-        /*
-         * drawView = new DrawView(this);
-         * drawView.setBackgroundColor(Color.WHITE);
-         * setContentView(drawView);
-         */
     }
 
     @Override
