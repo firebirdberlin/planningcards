@@ -18,7 +18,7 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.firebirdberlin.pageindicator.PageIndicator;
+import de.firebirdberlin.pageindicator.PageIndicator;
 
 public class MainActivity extends Activity {
 
