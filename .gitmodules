@@ -1,3 +1,6 @@
 [submodule "externals/android-page-indicator"]
 	path = externals/android-page-indicator
 	url = https://github.com/firebirdberlin/android-page-indicator.git
+[submodule "externals/android-preferences"]
+	path = externals/android-preferences
+	url = https://github.com/firebirdberlin/android-preferences.git

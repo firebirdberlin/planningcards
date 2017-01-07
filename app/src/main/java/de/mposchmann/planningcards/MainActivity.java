@@ -4,19 +4,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.AppCompatActivity;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.support.v7.widget.Toolbar;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import de.firebirdberlin.pageindicator.PageIndicator;
 
@@ -24,7 +35,6 @@ public class MainActivity extends Activity {
 
     private static final String DEBUG_TAG = MainActivity.class.getSimpleName();
 
-    DrawView drawView;
     private CustomViewPager viewPager = null;
 
     @Override
@@ -39,36 +49,54 @@ public class MainActivity extends Activity {
 
         setContentView(R.layout.main);
 
+        /*
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        */
+
         viewPager = (CustomViewPager) findViewById(R.id.pager);
         final PageIndicator pageIndicator = (PageIndicator) findViewById(R.id.page_indicator);
 
         List<View> views = new ArrayList<View>();
-        List<DrawView> drawViews = new ArrayList<DrawView>();
+        List<PlanningCardView> planningCardViews = new ArrayList<PlanningCardView>();
 
         String[] texts = new String[] {"0", "1/2", "1", "2", "3", "5", "8", "13", "20", "40",
                                        "100", "?"};
 
+        // init welcome card
+        WelcomeCardView welcomeCardView = new WelcomeCardView(this);
+        // layer a button on top of the card view
+        FrameLayout layout = new FrameLayout(this);
+        FrameLayout.LayoutParams layoutparams=new FrameLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT,ViewGroup.LayoutParams.FILL_PARENT, Gravity.CENTER_HORIZONTAL|Gravity.CENTER_VERTICAL);
+        layout.setLayoutParams(layoutparams);
+        layout.addView(welcomeCardView);
+        View welcomeView = (View) getLayoutInflater().inflate(R.layout.welcome, null);
+        layout.addView(welcomeView);
+        views.add(layout);
+
+
+
+        // init cards
         for (String text : texts) {
-            DrawView drawView = new DrawView(this, text);
+            PlanningCardView planningCardView = new PlanningCardView(this, text);
 
             //disable the screen lock for card views
-            drawView.setKeepScreenOn(true);
+            planningCardView.setKeepScreenOn(true);
 
             //every view must have its own GestureDetector to handle the events' view later
-            MyGestureListener touchListener = new MyGestureListener(drawView, viewPager);
+            MyGestureListener touchListener = new MyGestureListener(planningCardView, viewPager);
             GestureDetector gestureDetector = new GestureDetector(this, touchListener);
             gestureDetector.setOnDoubleTapListener(touchListener);
 
-            //test scale detection
+            //scale detection
             ScaleGestureDetector scaleGestureDetector = new ScaleGestureDetector(this,
-                                                                                 new ScaleListener(drawViews));
+                                                                                 new ScaleListener(planningCardViews));
             MyTouchListener onTouchListener = new MyTouchListener(gestureDetector,
                                                                   scaleGestureDetector);
-            drawView.setOnTouchListener(onTouchListener);
-            /////
+            planningCardView.setOnTouchListener(onTouchListener);
 
-            views.add(drawView);
-            drawViews.add(drawView);
+            views.add(planningCardView);
+            planningCardViews.add(planningCardView);
 
         }
 
@@ -88,11 +116,28 @@ public class MainActivity extends Activity {
 
     }
 
+    public void onClickWelcomeButton(View view) {
+        PreferencesActivity.start(this);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        //getMenuInflater().inflate(R.menu.activity_main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+        if (id == R.id.action_settings) {
+            //startActivity(new Intent(getApplicationContext(),Preferences.class));
+            PreferencesActivity.start(this);
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -111,7 +156,7 @@ public class MainActivity extends Activity {
             if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN || keyCode == KeyEvent.KEYCODE_VOLUME_UP) {
                 int current = viewPager.getCurrentItem();
                 MyPageAdapter adapter = (MyPageAdapter) viewPager.getAdapter();
-                DrawView view = (DrawView) adapter.getItem(current);
+                PlanningCardView view = (PlanningCardView) adapter.getItem(current);
                 if ( view.isHide() ) {
                     view.setHide(false);
                     viewPager.setPagingEnabled(true);
@@ -145,12 +190,12 @@ public class MainActivity extends Activity {
 
     private static class MyGestureListener implements OnGestureListener, OnDoubleTapListener {
 
-        private final DrawView drawView;
+        private final PlanningCardView planningCardView;
         private final CustomViewPager viewPager;
 
-        public MyGestureListener(DrawView drawView, CustomViewPager viewPager) {
+        public MyGestureListener(PlanningCardView planningCardView, CustomViewPager viewPager) {
             super();
-            this.drawView = drawView;
+            this.planningCardView = planningCardView;
             this.viewPager = viewPager;
         }
 
@@ -209,16 +254,16 @@ public class MainActivity extends Activity {
         }
 
         private void toggleDrawView() {
-            drawView.setHide(!drawView.isHide());
-            viewPager.setPagingEnabled(! drawView.isHide() );
+            planningCardView.setHide(!planningCardView.isHide());
+            viewPager.setPagingEnabled(! planningCardView.isHide() );
         }
     }
 
     private final class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
-        private final List<DrawView> views;
+        private final List<PlanningCardView> views;
 
-        public ScaleListener(List<DrawView> views) {
+        public ScaleListener(List<PlanningCardView> views) {
             super();
             this.views = views;
         }
@@ -227,7 +272,7 @@ public class MainActivity extends Activity {
         public boolean onScale(ScaleGestureDetector detector) {
             //Log.d(DEBUG_TAG, "onScale: " + detector.getScaleFactor());
 
-            for(DrawView view : views) {
+            for(PlanningCardView view : views) {
                 view.zoom(detector.getScaleFactor());
                 view.invalidate();  //repaint
             }

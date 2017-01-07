@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Planning Cards</string>
+    <string name="about">About</string>
+    <string name="contribute">Contribute</string>
+    <string name="credits">Credits</string>
+    <string name="donate">Donate</string>
+    <string name="recommend">Recommend app</string>
 </resources>

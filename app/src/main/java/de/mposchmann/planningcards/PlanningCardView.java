@@ -7,19 +7,12 @@ import android.graphics.Paint;
 import android.graphics.Paint.Align;
 import android.graphics.Rect;
 import android.graphics.RectF;
-import android.view.View;
 
-public class DrawView extends View {
+public class PlanningCardView extends AbstractCardView {
 
-    final Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-    final String text;
+    private final String text;
 
-    final float roundCornerPercentOfHeight = 0.04f;
-    final int cardPadding = 1;
-
-    int posX = 0;
-    int posY = 0;
-    float adjustedTextSize = 0;
+    private float adjustedTextSize = 0;
 
     private final float minScalePercent = 0.05f;
     private final float maxScalePercent = 0.4f;
@@ -28,8 +21,6 @@ public class DrawView extends View {
     private boolean scaleChanged = true;
 
     private boolean hide = false;
-
-    final Rect tmpBounds = new Rect();
 
     public void zoom(float factor) {
         currentScalePercent = Math.max(minScalePercent, Math.min(maxScalePercent, currentScalePercent * factor));
@@ -49,7 +40,7 @@ public class DrawView extends View {
         return text;
     }
 
-    public DrawView(Context context, String text) {
+    public PlanningCardView(Context context, String text) {
         super(context);
         paint.setColor(Color.BLACK);
         this.setBackgroundColor(Color.BLACK);
@@ -58,43 +49,11 @@ public class DrawView extends View {
     }
 
     @Override
-    public void onDraw(Canvas canvas) {
-        //drawSimpleCard(canvas);
-        drawRealCard(canvas);
+    protected void drawCardContent(Canvas canvas, float margin, RectF frameRect) {
+        drawNumbers(canvas, margin, frameRect);
     }
 
-    private void drawRealCard(Canvas canvas) {
-
-        this.setBackgroundColor(Color.BLACK);
-
-        if (hide) {
-            return;
-        }
-
-        float roundCornerRadius = this.getHeight() * roundCornerPercentOfHeight;
-
-        //draw white card
-        paint.setStyle(Paint.Style.FILL);
-        paint.setColor(Color.WHITE);
-        paint.setStrokeWidth(1f);
-        RectF rect = new RectF(cardPadding, cardPadding, this.getWidth() - 1 - cardPadding, this.getHeight() - 1 - cardPadding);
-        canvas.drawRoundRect(rect, roundCornerRadius,roundCornerRadius,  paint);
-
-        //draw frame
-        paint.setStyle(Paint.Style.STROKE);
-        paint.setColor(Color.BLACK);
-        paint.setStrokeWidth(1f);
-
-        //margin a bit smaller than the round corner radius
-        float margin = cardPadding + (roundCornerRadius * 0.9f);
-
-        rect = new RectF(margin, margin, this.getWidth() - 1 - margin, this.getHeight() - 1 - margin);
-        RectF frameRect = rect;
-
-
-        //this round corner radius is smaller,  * 0.7 = hack, should calculated from padding
-        canvas.drawRoundRect(rect, roundCornerRadius * 0.7f, roundCornerRadius * 0.7f, paint);
-
+    private void drawNumbers(Canvas canvas, float margin, RectF frameRect) {
         // use densityMultiplier to take into account different pixel densities
         /*
          * final float densityMultiplier = getContext().getResources()
@@ -114,7 +73,7 @@ public class DrawView extends View {
 
             //calc max scale factor by percent but limit to frameRect
             float maxTextSizeByPercent = adjustTextSize(text, canvas, currentScalePercent);
-            float maxTextSize = getMaxTextSize(text, canvas, frameRect);
+            float maxTextSize = getMaxTextSize(text, frameRect);
             this.adjustedTextSize = Math.min(maxTextSize, maxTextSizeByPercent);
 
             paint.setTextSize(adjustedTextSize);
@@ -123,7 +82,6 @@ public class DrawView extends View {
         } else {
             paint.setTextSize(adjustedTextSize);
         }
-
 
         /*
         paint.setTextAlign(Align.CENTER);
@@ -145,6 +103,7 @@ public class DrawView extends View {
         float textCenterY = centerY + textBounds.height(); //bottom origin
         canvas.drawText(text, textCenterX, textCenterY, paint);
 
+        final Rect tmpBounds = new Rect();
 
         //draw small text (half the size) again in all 4 corners
         paint.setTextSize(adjustedTextSize * 0.3f);
@@ -171,7 +130,6 @@ public class DrawView extends View {
         canvas.rotate(180,  this.getWidth() - margin - (tmpBounds.width() / 2) - 1, this.getHeight() - margin - (tmpBounds.height() / 2) - 1);
         canvas.drawText(text, this.getWidth() - margin - tmpBounds.left - tmpBounds.width() - 1, this.getHeight() - margin - tmpBounds.bottom -1 , paint);
         canvas.restore();
-
     }
 
     private float adjustTextSize(String text, Canvas canvas, float percent) {
@@ -198,7 +156,7 @@ public class DrawView extends View {
         return size;
     }
 
-    private float getMaxTextSize(String text, Canvas canvas, RectF boundingRect) {
+    private float getMaxTextSize(String text, RectF boundingRect) {
         paint.setTextSize(100);
         paint.setTextScaleX(1.0f);
         Rect textBounds = new Rect();
@@ -214,4 +172,5 @@ public class DrawView extends View {
 
         return scale;
     }
+
 }
