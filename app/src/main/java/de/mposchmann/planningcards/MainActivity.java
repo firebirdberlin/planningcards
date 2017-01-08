@@ -3,12 +3,10 @@ package de.mposchmann.planningcards;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnDoubleTapListener;
 import android.view.GestureDetector.OnGestureListener;
@@ -21,14 +19,9 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.support.v7.widget.Toolbar;
-import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import de.firebirdberlin.pageindicator.PageIndicator;
 
@@ -102,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         MyPageAdapter p = new MyPageAdapter(views);
 
-        pageIndicator.setPageCount(texts.length);
+        pageIndicator.setPageCount(texts.length + 1);
 
         viewPager.setAdapter(p);
         viewPager.setOnPageChangeListener(new OnPageChangeListener() {
@@ -117,21 +110,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickWelcomeButton(View view) {
-        /*
-        try {
-            ((View) findViewById(android.R.id.title).getParent())
-                    .setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-        }
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
-        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        */
-
         PreferencesActivity.start(this);
-
-        //Intent intent = new Intent(this, Main2Activity.class);
-        //startActivity(intent);
-
     }
 
     @Override
@@ -142,12 +121,8 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.action_settings) {
-            //startActivity(new Intent(getApplicationContext(),Preferences.class));
             PreferencesActivity.start(this);
             return true;
         }
@@ -194,9 +169,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onTouch(View view, MotionEvent motionEvent) {
-            //Log.d("onTouchListener", "touched");
-            //return gestureScanner.onTouchEvent(motionEvent);
-            //use both detectors
             return gestureScanner.onTouchEvent(motionEvent) || scaleGestureDetector.onTouchEvent(motionEvent);
         }
 

@@ -33,14 +33,8 @@ public class WelcomeCardView extends AbstractCardView {
 
         if (this.adjustedTextSize == null) {
 
-            //get minimum allowed text size:
-            //float minTextSize = adjustTextSize(text, canvas, .05f);
-
-            //this.adjustedTextSize = adjustTextSize(text, canvas, .3f);
-
             //calc max scale factor by percent but limit to frameRect
             this.adjustedTextSize = adjustWelcomeTextSize(title1, canvas, 0.5f);
-            //Log.d("drawview", "adjustWelcomeTextSize called");
         }
 
         paint.setTextSize(this.adjustedTextSize);

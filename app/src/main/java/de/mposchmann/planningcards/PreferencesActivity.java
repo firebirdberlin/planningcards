@@ -22,8 +22,6 @@ public class PreferencesActivity extends PreferenceActivity {
             .replace(android.R.id.content, fragment)
             .commit();
 
-       // getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP);
-       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public static void start(Context context) {

@@ -38,10 +38,11 @@ public abstract class AbstractCardView extends View {
     }
 
     private void drawCard(Canvas canvas) {
-
+/*
         if (hide) {
             return;
         }
+*/
 
         float roundCornerRadius = this.getHeight() * roundCornerPercentOfHeight;
         //margin a bit smaller than the round corner radius
@@ -49,6 +50,12 @@ public abstract class AbstractCardView extends View {
         RectF frameRect = new RectF(margin, margin, this.getWidth() - 1 - margin, this.getHeight() - 1 - margin);
 
         drawEmptyCard(canvas, roundCornerRadius, frameRect);
+
+
+        if (hide) {
+            return;
+        }
+
         drawCardContent(canvas, margin, frameRect);
 
     }
@@ -56,6 +63,10 @@ public abstract class AbstractCardView extends View {
     private void drawEmptyCard(Canvas canvas, float roundCornerRadius, RectF frameRect) {
 
         this.setBackgroundColor(Color.BLACK);
+
+        if (hide) {
+            return;
+        }
 
         //draw white card
         paint.setStyle(Paint.Style.FILL);

@@ -20,20 +20,11 @@ public class PlanningCardView extends AbstractCardView {
     private float currentScalePercent = 0.2f;
     private boolean scaleChanged = true;
 
-    private boolean hide = false;
+
 
     public void zoom(float factor) {
         currentScalePercent = Math.max(minScalePercent, Math.min(maxScalePercent, currentScalePercent * factor));
         scaleChanged = true;
-    }
-
-    public boolean isHide() {
-        return hide;
-    }
-
-    public void setHide(boolean hide) {
-        this.hide = hide;
-        invalidate();
     }
 
     public String getText() {
@@ -83,16 +74,6 @@ public class PlanningCardView extends AbstractCardView {
             paint.setTextSize(adjustedTextSize);
         }
 
-        /*
-        paint.setTextAlign(Align.CENTER);
-        if (posX == 0) {
-            this.posX = (canvas.getWidth() / 2);
-        }
-        if (posY == 0) {
-            this.posY = (int) ((canvas.getHeight() / 2) - ((paint.descent() + paint.ascent()) / 2));
-        }
-        canvas.drawText(text, 0, text.length(), posX, posY, paint);
-        */
 
         //draw number centered
         paint.setTextAlign(Align.LEFT);
