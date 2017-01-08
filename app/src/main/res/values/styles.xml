@@ -13,4 +13,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <!-- This theme is used to show ActionBar on sub-PreferenceScreens -->
+    <style name="PreferenceTheme" parent="">
+        <item name="android:windowActionBar">true</item>
+        <item name="android:windowNoTitle">false</item>
+    </style>
+
 </resources>

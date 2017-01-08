@@ -35,7 +35,7 @@
                     android:key="credits"
                     android:selectable="false"
                     android:enabled="true"
-                    android:title="Martin Poschmann (2016)"
+                    android:title="Martin Poschmann (2017)"
                     android:summary="martin.poschmann@gmail.com"/>
 
                 <Preference

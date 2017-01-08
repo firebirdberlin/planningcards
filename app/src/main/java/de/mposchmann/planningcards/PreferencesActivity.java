@@ -6,10 +6,11 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 
-public class PreferencesActivity extends AppCompatActivity {
+public class PreferencesActivity extends PreferenceActivity {
     PreferencesFragment fragment = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,6 +21,9 @@ public class PreferencesActivity extends AppCompatActivity {
             .beginTransaction()
             .replace(android.R.id.content, fragment)
             .commit();
+
+       // getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_TITLE | ActionBar.DISPLAY_SHOW_HOME | ActionBar.DISPLAY_HOME_AS_UP);
+       // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public static void start(Context context) {
@@ -38,4 +42,6 @@ public class PreferencesActivity extends AppCompatActivity {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+
 }
