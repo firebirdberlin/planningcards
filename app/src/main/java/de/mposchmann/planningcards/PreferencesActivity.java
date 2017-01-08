@@ -6,13 +6,15 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
+import android.support.v7.app.AppCompatActivity;
 
 
-public class PreferencesActivity extends Activity {
+public class PreferencesActivity extends AppCompatActivity {
     PreferencesFragment fragment = null;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.setTitle(R.string.title_settings);
         fragment = new PreferencesFragment();
         getFragmentManager()
             .beginTransaction()

@@ -5,4 +5,6 @@
     <string name="credits">Credits</string>
     <string name="donate">Donate</string>
     <string name="recommend">Recommend app</string>
+    <string name="title_activity_test">Test</string>
+    <string name="title_settings">Settings</string>
 </resources>

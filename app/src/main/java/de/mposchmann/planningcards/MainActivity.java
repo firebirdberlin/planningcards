@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
@@ -31,7 +32,7 @@ import android.widget.RelativeLayout;
 
 import de.firebirdberlin.pageindicator.PageIndicator;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     private static final String DEBUG_TAG = MainActivity.class.getSimpleName();
 
@@ -41,18 +42,17 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //Remove title bar
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        //fullscreen
+        setContentView(R.layout.main);
+
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        // fullscreen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.main);
-
-        /*
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-        */
+        // hide toolbar
+        getSupportActionBar().hide();
 
         viewPager = (CustomViewPager) findViewById(R.id.pager);
         final PageIndicator pageIndicator = (PageIndicator) findViewById(R.id.page_indicator);
@@ -117,7 +117,21 @@ public class MainActivity extends Activity {
     }
 
     public void onClickWelcomeButton(View view) {
+        /*
+        try {
+            ((View) findViewById(android.R.id.title).getParent())
+                    .setVisibility(View.VISIBLE);
+        } catch (Exception e) {
+        }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        */
+
         PreferencesActivity.start(this);
+
+        //Intent intent = new Intent(this, Main2Activity.class);
+        //startActivity(intent);
+
     }
 
     @Override
